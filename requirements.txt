@@ -1,4 +1,6 @@
+streamlit>=1.41.0
 pandas
 matplotlib
 openpyxl
-streamlit
+seaborn
+altair>=5.0.0
