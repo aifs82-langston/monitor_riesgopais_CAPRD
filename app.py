@@ -154,4 +154,18 @@ st.info("""
 * Como bien observas, **Panamá** lidera, pero **Guatemala** y **República Dominicana** están en la zona de 'Crossover' (BB+ / Ba1), a un paso de la categoría de inversión.
 """)
 
+with st.expander("🔍 Ver Tabla Comparativa de Letras"):
+    # Re-obtener las letras para la tabla final
+    tabla_letras = []
+    for nombre, (cod, agencias) in dict_paises.items():
+        fila = {'País': nombre}
+        for ag in ['Fitch', 'Moodys', 'S&P']:
+            if ag in agencias:
+                df_t, _ = cargar_datos(ag, cod)
+                fila[ag] = df_t['Calificación'].iloc[-1] if df_t is not None else "N/A"
+            else:
+                fila[ag] = "N/A"
+        tabla_letras.append(fila)
+    st.table(pd.DataFrame(tabla_letras))
+
 
