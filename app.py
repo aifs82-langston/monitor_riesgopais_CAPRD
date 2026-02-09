@@ -80,6 +80,22 @@ with col_sel:
 cod_pais, agencias = dict_paises[pais_sel]
 
 # --- BLOQUE DE MÉTRICAS ---
+#st.markdown(f"### 📌 Resumen Actual: {pais_sel}")
+#cols_met = st.columns(len(agencias))
+
+#for i, ag in enumerate(agencias):
+    #df_temp, _ = cargar_datos(ag, cod_pais)
+    #if df_temp is not None:
+        #ultima_calif = df_temp['Calificación'].iloc[-1]
+        #ultima_persp = df_temp['Perspectiva'].iloc[-1]
+        #delta_color = "normal" if ultima_persp == "Estable" else "inverse" if ultima_persp == "Negativa" else "normal"
+
+        #with cols_met[i]:
+            #st.metric(label=f"Última {ag}", value=ultima_calif, delta=ultima_persp, delta_color=delta_color)
+
+#st.divider()
+
+# --- BLOQUE DE MÉTRICAS (Sin flechas) ---
 st.markdown(f"### 📌 Resumen Actual: {pais_sel}")
 cols_met = st.columns(len(agencias))
 
@@ -88,13 +104,19 @@ for i, ag in enumerate(agencias):
     if df_temp is not None:
         ultima_calif = df_temp['Calificación'].iloc[-1]
         ultima_persp = df_temp['Perspectiva'].iloc[-1]
-        delta_color = "normal" if ultima_persp == "Estable" else "inverse" if ultima_persp == "Negativa" else "normal"
+
+        # Definir color según la perspectiva (Verde para Positiva, Rojo para Negativa, Gris para Estable)
+        color_persp = "#09ab3b" if ultima_persp == "Positiva" else "#ff4b4b" if ultima_persp == "Negativa" else "#6d7178"
 
         with cols_met[i]:
-            st.metric(label=f"Última {ag}", value=ultima_calif, delta=ultima_persp, delta_color=delta_color)
-
-st.divider()
-
+            # Usamos un div manual para aprovechar el estilo .stMetric que ya definiste en tu CSS
+            st.markdown(f"""
+                <div class="stMetric">
+                    <p style="color: #555; font-size: 14px; margin-bottom: 5px;">Última {ag}</p>
+                    <h2 style="margin: 0; color: #31333f; font-size: 2rem;">{ultima_calif}</h2>
+                    <p style="color: {color_persp}; font-size: 15px; font-weight: bold; margin-top: 5px;">{ultima_persp}</p>
+                </div>
+            """, unsafe_allow_html=True)
 # --- GRÁFICOS ---
 n_agencias = len(agencias)
 fig, axs = plt.subplots(2, n_agencias, figsize=(5 * n_agencias, 7), sharex='col')
