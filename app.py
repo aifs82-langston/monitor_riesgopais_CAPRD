@@ -65,7 +65,7 @@ st.title("📊 Monitor de Riesgo Soberano: Calificación y Perspectiva")
 st.subheader("Centroamérica, Panamá y República Dominicana")
 
 # Sidebar
-st.sidebar.image(FullLogo.png, width=100) # Un icono de mundo
+st.sidebar.image("FullLogo.png", use_container_width=True)
 st.sidebar.header("Filtros de Análisis")
 pais_sel = st.sidebar.selectbox("Seleccione País:", list(dict_paises.keys()))
 cod_pais, agencias = dict_paises[pais_sel]
