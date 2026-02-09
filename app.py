@@ -61,14 +61,27 @@ def cargar_datos(agencia, cod):
         return None, None
 
 # === INTERFAZ DE USUARIO ===
-st.title("📊 Monitor de Riesgo Soberano: Calificación y Perspectiva")
-st.subheader("Centroamérica, Panamá y República Dominicana")
+#st.title("📊 Monitor de Riesgo Soberano: Calificación y Perspectiva")
+#st.subheader("Centroamérica, Panamá y República Dominicana")
 
 # Sidebar
-st.sidebar.image("FullLogo.png", use_container_width=True)
-st.sidebar.header("Filtros de Análisis")
-pais_sel = st.sidebar.selectbox("Seleccione País:", list(dict_paises.keys()))
-cod_pais, agencias = dict_paises[pais_sel]
+#st.sidebar.image("FullLogo.png", use_container_width=True)
+#st.sidebar.header("Filtros de Análisis")
+#pais_sel = st.sidebar.selectbox("Seleccione País:", list(dict_paises.keys()))
+#cod_pais, agencias = dict_paises[pais_sel]
+
+# === ENCABEZADO Y LOGO (Ahora en el cuerpo principal) ===
+col_logo, col_titulo = st.columns([1, 4])
+
+with col_logo:
+    # Reemplaza 'logo.png' por el nombre real de tu archivo en el repositorio
+    st.image("FullLogo.png", width=150)
+
+with col_titulo:
+    st.title("📊 Monitor de Riesgo Soberano: Calificación y Perspectiva")
+    st.subheader("Centroamérica, Panamá y República Dominicana")
+
+st.divider()
 
 # --- BLOQUE DE MÉTRICAS ---
 st.markdown("### 📌 Resumen Actual")
