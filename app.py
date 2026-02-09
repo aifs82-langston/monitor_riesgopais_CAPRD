@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FixedLocator
+import seaborn as sns
 
 # === CONFIGURACIÓN DE LA PÁGINA ===
 st.set_page_config(page_title="Monitor de Riesgo Soberano - CAPRD", layout="wide")
@@ -11,11 +12,11 @@ st.markdown("""
     <style>
     .main { background-color: #f5f7f9; }
     .stMetric { background-color: #ffffff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .block-container { padding-top: 2rem; }
     </style>
     """, unsafe_allow_html=True)
 
 # === CONFIGURACIÓN DE USUARIO Y REPOSITORIO ===
-# ⚠️ REEMPLAZA ESTOS DATOS CON LOS TUYOS ⚠️
 USUARIO_GH = "aifs82-langston"
 REPO_GH = "monitor_riesgopais_CAPRD"
 FECHA_ARC = "11042025"
@@ -60,22 +61,10 @@ def cargar_datos(agencia, cod):
     except:
         return None, None
 
-# === INTERFAZ DE USUARIO ===
-#st.title("📊 Monitor de Riesgo Soberano: Calificación y Perspectiva")
-#st.subheader("Centroamérica, Panamá y República Dominicana")
-
-# Sidebar
-#st.sidebar.image("FullLogo.png", use_container_width=True)
-#st.sidebar.header("Filtros de Análisis")
-#pais_sel = st.sidebar.selectbox("Seleccione País:", list(dict_paises.keys()))
-#cod_pais, agencias = dict_paises[pais_sel]
-
-# === ENCABEZADO Y LOGO (Ahora en el cuerpo principal) ===
+# === ENCABEZADO Y LOGO ===
 col_logo, col_titulo = st.columns([1, 4])
-
 with col_logo:
-    # Reemplaza 'logo.png' por el nombre real de tu archivo en el repositorio
-    st.image("FullLogo.png", width=150)
+    st.image("FullLogo.png", width=200)
 
 with col_titulo:
     st.title("📊 Monitor de Riesgo Soberano: Calificación y Perspectiva")
@@ -83,8 +72,15 @@ with col_titulo:
 
 st.divider()
 
+# === SELECTOR DE PAÍS (Corregido: movido al cuerpo principal) ===
+col_sel, _ = st.columns([1, 2])
+with col_sel:
+    pais_sel = st.selectbox("🌍 Seleccione un País para analizar:", list(dict_paises.keys()))
+
+cod_pais, agencias = dict_paises[pais_sel]
+
 # --- BLOQUE DE MÉTRICAS ---
-st.markdown("### 📌 Resumen Actual")
+st.markdown(f"### 📌 Resumen Actual: {pais_sel}")
 cols_met = st.columns(len(agencias))
 
 for i, ag in enumerate(agencias):
@@ -92,8 +88,6 @@ for i, ag in enumerate(agencias):
     if df_temp is not None:
         ultima_calif = df_temp['Calificación'].iloc[-1]
         ultima_persp = df_temp['Perspectiva'].iloc[-1]
-
-        # Lógica de color de la métrica (simple)
         delta_color = "normal" if ultima_persp == "Estable" else "inverse" if ultima_persp == "Negativa" else "normal"
 
         with cols_met[i]:
@@ -110,14 +104,12 @@ if n_agencias == 1: axs = axs.reshape(2, 1)
 for i, ag in enumerate(agencias):
     df_temp, escala = cargar_datos(ag, cod_pais)
     if df_temp is not None:
-        # Panel Superior: Calificación
         axs[0, i].plot(df_temp['Fecha'], df_temp['Calif_num'], marker='o', color='#1f77b4', linewidth=2)
         axs[0, i].set_title(f"{ag}: Calificación", fontsize=12, fontweight='bold')
         axs[0, i].set_yticks(list(escala.values()))
         axs[0, i].set_yticklabels(list(escala.keys()))
         axs[0, i].grid(True, linestyle='--', alpha=0.5)
 
-        # Panel Inferior: Perspectiva
         df_p = df_temp.dropna(subset=['Perspectiva_num'])
         axs[1, i].step(df_p['Fecha'], df_p['Perspectiva_num'], where='mid', marker='s', color='#ff7f0e', linewidth=2)
         axs[1, i].set_title(f"{ag}: Perspectiva", fontsize=12, fontweight='bold')
@@ -129,55 +121,47 @@ for i, ag in enumerate(agencias):
 plt.tight_layout()
 st.pyplot(fig)
 
-# Pie de página
 st.caption(f"Fuente: Elaboración propia basada en reportes de Fitch, Moody's y S&P al cuarto trimestre de 2025")
-import seaborn as sns
 
+# --- COMPARATIVA REGIONAL ---
 st.divider()
 st.header("🗺️ Comparativa Regional (Última Calificación)")
 
 @st.cache_data
 def generar_matriz_regional():
     datos_matriz = []
-    for nombre, (cod, agencias) in dict_paises.items():
+    for nombre, (cod, ags) in dict_paises.items():
         fila = {'País': nombre}
         for ag in ['Fitch', 'Moodys', 'S&P']:
-            if ag in agencias:
+            if ag in ags:
                 df_t, _ = cargar_datos(ag, cod)
-                if df_t is not None:
-                    # Guardamos el valor numérico para el heatmap
-                    fila[ag] = df_t['Calif_num'].iloc[-1]
+                fila[ag] = df_t['Calif_num'].iloc[-1] if df_t is not None else None
             else:
                 fila[ag] = None
         datos_matriz.append(fila)
     return pd.DataFrame(datos_matriz).set_index('País')
 
 df_matrix = generar_matriz_regional()
-
-# Creamos el mapa de calor con Matplotlib/Seaborn
 fig_heat, ax_heat = plt.subplots(figsize=(10, 6))
 sns.heatmap(df_matrix, annot=True, cmap="RdYlGn", cbar=False, ax=ax_heat)
-
-# Personalización para entender el Grado de Inversión
 ax_heat.set_title("Puntaje de Riesgo (Valores más altos = Menor Riesgo)", fontsize=14)
 st.pyplot(fig_heat)
 
-st.info("""
-💡 **Nota para el análisis:** * El **Grado de Inversión** comienza en el puntaje **13** (BBB- / Baa3). 
-""")
+st.info("💡 **Nota:** El **Grado de Inversión** comienza en el puntaje **13** (BBB- / Baa3).")
 
-with st.expander("🔍 Ver Tabla Comparativa de Letras (Última calificación)"):
-    # Re-obtener las letras para la tabla final
-    tabla_letras = []
-    for nombre, (cod, agencias) in dict_paises.items():
+# --- TABLA COMPARATIVA FINAL (Calificación + Perspectiva) ---
+with st.expander("🔍 Ver Tabla Comparativa Detallada"):
+    tabla_data = []
+    for nombre, (cod, ags) in dict_paises.items():
         fila = {'País': nombre}
         for ag in ['Fitch', 'Moodys', 'S&P']:
-            if ag in agencias:
+            if ag in ags:
                 df_t, _ = cargar_datos(ag, cod)
-                fila[ag] = df_t['Calificación'].iloc[-1] if df_t is not None else "N/A"
+                if df_t is not None:
+                    fila[ag] = f"{df_t['Calificación'].iloc[-1]} ({df_t['Perspectiva'].iloc[-1]})"
+                else:
+                    fila[ag] = "N/A"
             else:
                 fila[ag] = "N/A"
-        tabla_letras.append(fila)
-    st.table(pd.DataFrame(tabla_letras))
-
-
+        tabla_data.append(fila)
+    st.table(pd.DataFrame(tabla_data))
