@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import FixedLocator
 
 # === CONFIGURACIÓN DE LA PÁGINA ===
-st.set_page_config(page_title="Monitor de Riesgo Soberano - CA & DO", layout="wide")
+st.set_page_config(page_title="Monitor de Riesgo Soberano - CAPRD", layout="wide")
 
 # --- ESTILO PERSONALIZADO ---
 st.markdown("""
@@ -16,8 +16,8 @@ st.markdown("""
 
 # === CONFIGURACIÓN DE USUARIO Y REPOSITORIO ===
 # ⚠️ REEMPLAZA ESTOS DATOS CON LOS TUYOS ⚠️
-USUARIO_GH = "TU_USUARIO_DE_GITHUB"
-REPO_GH = "NOMBRE_DE_TU_REPOSITORIO"
+USUARIO_GH = "aifs82-langston"
+REPO_GH = "monitor_riesgopais_CAPRD"
 FECHA_ARC = "11042025"
 URL_BASE = f"https://raw.githubusercontent.com/{USUARIO_GH}/{REPO_GH}/main/data/"
 
