@@ -117,4 +117,41 @@ plt.tight_layout()
 st.pyplot(fig)
 
 # Pie de página
-st.caption(f"Fuente: Elaboración propia basada en reportes de Fitch, Moody's y S&P al {FECHA_ARC}.")
+st.caption(f"Fuente: Elaboración propia basada en reportes de Fitch, Moody's y S&P al cuarto trimestre de 2025")
+import seaborn as sns
+
+st.divider()
+st.header("🗺️ Comparativa Regional (Última Calificación)")
+
+@st.cache_data
+def generar_matriz_regional():
+    datos_matriz = []
+    for nombre, (cod, agencias) in dict_paises.items():
+        fila = {'País': nombre}
+        for ag in ['Fitch', 'Moodys', 'S&P']:
+            if ag in agencias:
+                df_t, _ = cargar_datos(ag, cod)
+                if df_t is not None:
+                    # Guardamos el valor numérico para el heatmap
+                    fila[ag] = df_t['Calif_num'].iloc[-1]
+            else:
+                fila[ag] = None
+        datos_matriz.append(fila)
+    return pd.DataFrame(datos_matriz).set_index('País')
+
+df_matrix = generar_matriz_regional()
+
+# Creamos el mapa de calor con Matplotlib/Seaborn
+fig_heat, ax_heat = plt.subplots(figsize=(10, 6))
+sns.heatmap(df_matrix, annot=True, cmap="RdYlGn", cbar=False, ax=ax_heat)
+
+# Personalización para entender el Grado de Inversión
+ax_heat.set_title("Puntaje de Riesgo (Valores más altos = Menor Riesgo)", fontsize=14)
+st.pyplot(fig_heat)
+
+st.info("""
+💡 **Nota para el análisis:** * El **Grado de Inversión** comienza en el puntaje **13** (BBB- / Baa3). 
+* Como bien observas, **Panamá** lidera, pero **Guatemala** y **República Dominicana** están en la zona de 'Crossover' (BB+ / Ba1), a un paso de la categoría de inversión.
+""")
+
+
