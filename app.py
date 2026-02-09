@@ -69,6 +69,7 @@ with col_logo:
 with col_titulo:
     st.title("📊 Monitor de Riesgo Soberano: Calificación y Perspectiva")
     st.subheader("Centroamérica, Panamá y República Dominicana")
+    st.markdown("Alfredo Ibrahim Flores Sarria")
 
 st.divider()
 
