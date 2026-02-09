@@ -151,10 +151,9 @@ st.pyplot(fig_heat)
 
 st.info("""
 💡 **Nota para el análisis:** * El **Grado de Inversión** comienza en el puntaje **13** (BBB- / Baa3). 
-* Como bien observas, **Panamá** lidera, pero **Guatemala** y **República Dominicana** están en la zona de 'Crossover' (BB+ / Ba1), a un paso de la categoría de inversión.
 """)
 
-with st.expander("🔍 Ver Tabla Comparativa de Letras"):
+with st.expander("🔍 Ver Tabla Comparativa de Letras (Última calificación)"):
     # Re-obtener las letras para la tabla final
     tabla_letras = []
     for nombre, (cod, agencias) in dict_paises.items():
