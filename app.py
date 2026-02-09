@@ -61,8 +61,8 @@ def cargar_datos(agencia, cod):
         return None, None
 
 # === INTERFAZ DE USUARIO ===
-st.title("📊 Monitor de Riesgo Soberano")
-st.subheader("Centroamérica y República Dominicana")
+st.title("📊 Monitor de Riesgo Soberano: Calificación y Perspectiva")
+st.subheader("Centroamérica, Panamá y República Dominicana")
 
 # Sidebar
 st.sidebar.image("https://cdn-icons-png.flaticon.com/512/330/330545.png", width=100) # Un icono de mundo
