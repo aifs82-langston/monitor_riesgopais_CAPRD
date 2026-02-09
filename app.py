@@ -68,7 +68,7 @@ with col_logo:
 
 with col_titulo:
     st.title("📊 Monitor de Riesgo Soberano: Calificación y Perspectiva")
-    st.subheader("Centroamérica, Panamá y República Dominicana")
+    st.subheader("Centroamérica, Panamá y República Dominicana (CAPRD)")
     st.markdown("Alfredo Ibrahim Flores Sarria ©2026")
 
 st.divider()
