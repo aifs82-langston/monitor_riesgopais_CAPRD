@@ -8,13 +8,13 @@ import seaborn as sns
 st.set_page_config(page_title="Monitor de Riesgo Soberano - CAPRD",page_icon="🚩🏛️", layout="wide")
 
 # --- ESTILO PERSONALIZADO ---
-#st.markdown("""
- #   <style>
-  #  .main { background-color: #f5f7f9; }
-   # .stMetric { background-color: #ffffff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    #.block-container { padding-top: 2rem; }
-    #</style>
-    #""", unsafe_allow_html=True)
+st.markdown("""
+    <style>
+    .main { background-color: #f5f7f9; }
+    .stMetric { background-color: #ffffff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .block-container { padding-top: 2rem; }
+    </style>
+    """, unsafe_allow_html=True)
 
 # === CONFIGURACIÓN DE USUARIO Y REPOSITORIO ===
 USUARIO_GH = "aifs82-langston"
