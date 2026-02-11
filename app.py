@@ -8,7 +8,7 @@ import seaborn as sns
 #st.set_page_config(page_title="Monitor de Riesgo Soberano - CAPRD",page_icon="🚩🏛️", layout="wide")
 st.set_page_config(
     page_title="Monitor de Riesgo Soberano - CAPRD",
-    page_icon="🚩🏛️",
+    page_icon="🚩",
     layout="wide"
 )
 
